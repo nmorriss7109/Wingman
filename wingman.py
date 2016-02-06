@@ -5,7 +5,7 @@ import pynder
 import os
 import cv2
 
-FBTOKEN = 'CAAGm0PX4ZCpsBACgdud69wZCOl5G2Lj5u8SP1C9xJi3Grt5UmUYO5uFYkS5a162dfwmABs1ZABYeO2yqTZBUmhnwJ0J7WYfC0OMgR5103N9cKCrgLjtF3sm6kAoEZAfmQGX2ztlNtLKdOLuf9rKqWkj4HEih6q5JurQIrRlNBjF8AZC3buLvPDckNl5cia9pEle9FKDD37DwZDZD'
+FBTOKEN = 'CAAGm0PX4ZCpsBAL77EmVZAV8gxHAal1p3HDB17RnBF6qkjEBM2dk1dnlgFOX1HjLZA2TB0vq0cjoJL4ZAG852ZBOzUb6lsunKXhrdnHusJnPb36VkWbojdCfz1mxy0K6fx84rmuCqh2t8jZC6j5ZAcUzWViUdhNptEP8JvuMcLLy3lOZCpbmqCMZCp25I6r18pNUG6v5Kned2cQZDZD'
 FBID = '464891386855067'
 
 
@@ -31,21 +31,18 @@ def convert_to_bw(filename):
 	face = np.array(face)
 	face = face.tolist()
 	print face
+	print len(face)
+	if len(face) == 1:
+		lst = face[0]
+		pt1 = [lst[0], lst[1]]
+		pt2 = [lst[0] + lst[2], lst[1] + lst[3]]
+		print pt1
+		print "hello"
+		print pt2
+		cv2.rectangle(cv2.imread('faces_bw/' + filename[5:]), (pt1[0], pt1[1]) , (pt2[0], pt2[1]), (255, 0, 0), 5, 8, 0)
 
-	for n in face:
-		if n == face[0]:
-			print n
-			pt1 = [n[0], n[1]]
-			pt2 = [n[0] + n[2], n[1] + n[3]]
-			print pt1
-			print "hello"
-			print pt2
-			cv2.rectangle(cv2.imread('faces_bw/' + filename[5:]), (pt1[0], pt1[1]) , (pt2[0], pt2[1]), (255, 0, 0), 5, 8, 0))
-			cv2.waitKey(0)
-			cv2.destroyAllWindows()
-
-		else:
-			print "too many faces"
+	else:
+		print "no faces/too many faces"
 
 	
 
