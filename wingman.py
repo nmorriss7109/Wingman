@@ -5,7 +5,7 @@ import pynder
 import os
 import cv2
 
-FBTOKEN = 'CAAGm0PX4ZCpsBAL77EmVZAV8gxHAal1p3HDB17RnBF6qkjEBM2dk1dnlgFOX1HjLZA2TB0vq0cjoJL4ZAG852ZBOzUb6lsunKXhrdnHusJnPb36VkWbojdCfz1mxy0K6fx84rmuCqh2t8jZC6j5ZAcUzWViUdhNptEP8JvuMcLLy3lOZCpbmqCMZCp25I6r18pNUG6v5Kned2cQZDZD'
+FBTOKEN = 'CAAGm0PX4ZCpsBAFzSZARBkZAPQSRGnLnQltUsLduuRKqcZBYBQPPe7F6u78ZAtsdmBdJSyMTtCImXE8iZBhqCkb1o2IkkENaVJKckQUZAOHkyEw82eurzZCDOcmBSZAIBMoAr1Kn5jp4UoANcyqiGmL3ai1T5JNv2xMeZA3eicXPsH8ksY8oeypw2FjeRlnSgNnDxNoVRaKlOfnwZDZD'
 FBID = '464891386855067'
 
 
@@ -18,31 +18,27 @@ def get_photos(users):
 		for i in range(0, len(img)):
 			filename = os.path.join('faces', user.name + str(i) + '.jpg')
 			urllib.urlretrieve(img[i], filename)
-			convert_to_bw(filename)
+			cv_convert(filename)
 
 
-def convert_to_bw(filename):
+def cv_convert(filename):
 	col = Image.open(filename)
 	gray = col.convert('L')
 	gray.save('faces_bw/' + filename[5:])
 	cascade_fn = '/usr/share/opencv/haarcascades/haarcascade_frontalface_default.xml'
 	face_cascade = cv2.CascadeClassifier(cascade_fn)
-	face = face_cascade.detectMultiScale(cv2.imread('faces_bw/' + filename[5:]), 1.3, 5)
-	face = np.array(face)
-	face = face.tolist()
-	print face
-	print len(face)
-	if len(face) == 1:
-		lst = face[0]
-		pt1 = [lst[0], lst[1]]
-		pt2 = [lst[0] + lst[2], lst[1] + lst[3]]
-		print pt1
-		print "hello"
-		print pt2
-		cv2.rectangle(cv2.imread('faces_bw/' + filename[5:]), (pt1[0], pt1[1]) , (pt2[0], pt2[1]), (255, 0, 0), 5, 8, 0)
+	faces = face_cascade.detectMultiScale(cv2.imread('faces_bw/' + filename[5:]), 1.3, 5)
+	faces = np.array(faces)
+	faces = faces.tolist()
+	print faces
+	if len(faces) == 1:
+		lst = faces[0]
+		gray = gray.crop((lst[0], lst[1], lst[0]+lst[2], lst[1]+lst[3]))
+		gray.save('processed_images/' + filename[5:])
 
 	else:
 		print "no faces/too many faces"
+
 
 	
 
